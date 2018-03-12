@@ -1,21 +1,18 @@
 const { db, Gardener, Plot, Vegetable } = require('./models.js');
 
-db.sync({ force: true }).then(() => {
-	const tomato = Vegetable.build({
-		name: 'tomato',
-		color: 'red',
-		planted_on: new Date('2018-03-12')
-	});
-	tomato.save().catch(error => console.log(error));
-});
-
 db
 	.sync({ force: true })
 	.then(() => {
-		return db.drop();
+		return Promise.all([
+			Vegetable.create({
+				name: 'tomato',
+				color: 'red',
+				planted_on: Date.now()
+			})
+		]);
 	})
 	.then(() => {
-		console.log('Database synced!');
+		console.log('Finished.');
 		db.close();
 	})
 	.catch(err => {
